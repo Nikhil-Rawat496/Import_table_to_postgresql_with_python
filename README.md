@@ -1,2 +1,33 @@
 # Import_table_to_postgresql_with_python
 In this repo i'm sharing the python program which will import full table with data in postgresql without creating table in postgresql manually. I am using three libraries (pandas:to get data in python, create_engine of sqlalchemy: to make connection and create now table in postgres, getpass:to securey access passowrd) to do this task.
+
+import pandas as pd
+from sqlalchemy import create_engine
+import getpass
+
+def connection_with_action(data):
+
+    password = getpass.getpass("Enter the password you entered while downoading postgresql: ")   # to get password in secure way
+    
+    #necessory parameters for connection with postgresql
+    username = 'postgres'  #Dafault username 
+    password = password    #get from getpass
+    host = 'localhost'     #default in every SQL databases
+    port = '5432'          #the default port in postgres to access the database
+    database = 'Practice'  #database we want to connect and create table in
+
+    try:
+        engine = create_engine(f"postgresql://{username}:{password}@{host}:{port}/{database}")   #function to connecting with database
+        
+        data.to_sql('New_table', engine, index=False, if_exists='replace')  #function of create_engine for create new table in database
+        
+        print("Connection successful and table created in database")
+    except Exception as e:
+        print(f"Connection failed dur to: {e} Error.")
+    finally:
+        print("Exiting..")
+
+        
+data_to_export = pd.read_csv("C:/Users/dell/OneDrive/Desktop/SQL_Full_Dataset.csv")
+connection_with_action(data_to_export)
+
