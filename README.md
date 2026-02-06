@@ -6,7 +6,6 @@ from sqlalchemy import create_engine
 import getpass
 
 def connection_with_action(data):
-
     password = getpass.getpass("Enter the password you entered while downoading postgresql: ")   # to get password in secure way
     
     #necessory parameters for connection with postgresql
@@ -26,8 +25,48 @@ def connection_with_action(data):
         print(f"Connection failed dur to: {e} Error.")
     finally:
         print("Exiting..")
-
         
-data_to_export = pd.read_csv("C:/Users/dell/OneDrive/Desktop/SQL_Full_Dataset.csv")
+data_to_export = pd.read_csv("C:/Users/dell/OneDrive/Desktop/SQL_Full_Dataset.csv")      #path of the data file with changing the '\' to '/' 
 connection_with_action(data_to_export)
 
+
+
+
+
+A small example script that imports a CSV into a PostgreSQL table using pandas and SQLAlchemy. The script creates the table automatically (using DataFrame.to_sql).
+
+## Requirements
+
+- Python 3.8+
+- pandas
+- SQLAlchemy
+- psycopg2-binary (Postgres driver)
+
+Install dependencies:
+run in cmd to get libraries 
+pip install pandas sqlalchemy psycopg2-binary
+
+
+## Files
+
+- `import_to_postgres.py` — script to import a CSV into PostgreSQL.
+- `README.md` — this file with usage instructions.
+
+## Usage
+
+Interactive (prompts for password):
+```bash
+python import_to_postgres.py --csv data.csv --table my_table --database Practice
+```
+
+Non-interactive (use environment variable):
+```bash
+export DATABASE_URL="postgresql+psycopg2://username:password@host:5432/dbname"
+python import_to_postgres.py --csv data.csv --table my_table --if-exists replace
+```
+
+## Notes
+
+- `--if-exists` options: `fail`, `replace`, `append`. Default is `replace`.
+- Avoid committing credentials to the repository.
+- The script will attempt to create the table based on the CSV columns and types.
